@@ -9,3 +9,9 @@ crons = ["*/15 * * * *"]
 [[kv_namespaces]]
 binding = "AIR_QUALITY"
 id = "57d41f3b1e6a4002b0a12003ed87fc64"
+
+[observability]
+enabled = true
+
+[observability.logs]
+invocation_logs = true
