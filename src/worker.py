@@ -50,12 +50,14 @@ async def poll(env, dataset):
         values = {}
         for field, metric in DATASETS[dataset].items():
             readings = latest["readings"].get(field, {})
-            values[metric] = {
+            regions = {
                 region: value for region in REGIONS
                 if type(value := readings.get(region)) in (int, float)
                 and math.isfinite(value) and value >= 0
             }
-        if not any(values.values()):
+            if regions:
+                values[metric] = regions
+        if not values:
             raise ValueError("Missing readings")
         if observed_at >= current.get("observed_at", 0):
             current.update(values=values, observed_at=observed_at)
@@ -75,15 +77,16 @@ class Default(WorkerEntrypoint):
             return Response("Not found\n", status=404)
         if request.method != "GET":
             return Response("Method not allowed\n", status=405, headers={"Allow": "GET"})
-        names = [name for metrics in DATASETS.values() for name in metrics.values()] + list(STATUS.values())
-        samples = {name: [] for name in names}
+        samples = {name: [] for metrics in DATASETS.values() for name in metrics.values()}
+        samples.update({name: [] for name in STATUS.values()})
         now = time.time()
         for dataset, metrics in DATASETS.items():
             current = await snapshot(self.env, dataset)
             age = now - current.get("observed_at", 0)
+            values = current.get("values", {})
             if current.get("poll_success") or age <= 3600:
                 for metric in metrics.values():
-                    for region, value in current.get("values", {}).get(metric, {}).items():
+                    for region, value in values.get(metric, {}).items():
                         samples[metric].append(f'{metric}{{region="{region}",dataset="{dataset}"}} {value}')
             current.setdefault("poll_success", 0)
             for field, metric in STATUS.items():
