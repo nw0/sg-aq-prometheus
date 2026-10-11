@@ -10,6 +10,20 @@ A Prometheus exporter for NEA's air quality datasets as a Cloudflare Worker.
 The worker polls the datasets every 15 minutes, storing the readings in Workers KV.
 In the event of a failed scrape, readings are considered current for 60 minutes. However, the `nea_polly_success` metric will be `0`.
 
+## Prometheus configuration
+
+Add this job to `scrape_configs` in your `prometheus.yml`:
+
+```yaml
+scrape_configs:
+  - job_name: singapore_air_quality
+    scheme: https
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - sg-aq.nicholas-593.workers.dev
+```
+
 ## Metrics
 
 Scrape `/metrics` for these gauges:
