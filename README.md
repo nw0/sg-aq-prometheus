@@ -19,6 +19,7 @@ scrape_configs:
   - job_name: singapore_air_quality
     scheme: https
     metrics_path: /metrics
+    scrape_interval: 5m
     static_configs:
       - targets:
           - sg-aq.nicholas-593.workers.dev
