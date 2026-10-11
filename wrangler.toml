@@ -3,6 +3,9 @@ main = "src/worker.py"
 compatibility_date = "2026-10-11"
 compatibility_flags = ["python_workers"]
 
+[cache]
+enabled = true
+
 [triggers]
 crons = ["*/15 * * * *"]
 
