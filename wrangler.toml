@@ -7,7 +7,7 @@ compatibility_flags = ["python_workers"]
 enabled = true
 
 [triggers]
-crons = ["*/15 * * * *"]
+crons = ["2/15 * * * *"]
 
 [[kv_namespaces]]
 binding = "AIR_QUALITY"
