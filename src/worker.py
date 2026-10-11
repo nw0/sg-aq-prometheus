@@ -98,5 +98,5 @@ class Default(WorkerEntrypoint):
             lines.extend(values)
         return Response("\n".join(lines) + "\n", headers={
             "Content-Type": "text/plain; version=0.0.4; charset=utf-8",
-            "Cache-Control": "public, max-age=450",
+            "Cache-Control": "public, max-age=30",
         })
