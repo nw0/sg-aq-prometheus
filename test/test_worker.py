@@ -115,6 +115,39 @@ class WorkerTests(unittest.IsolatedAsyncioTestCase):
         self.clock.return_value = 1791694800 + 3601
         self.assertNotIn('nea_pm10_sub_index{region=', await scrape(self.env))
 
+    async def test_gaseous_pollutant_metrics(self):
+        cases = (
+            ("no2_one_hour_max", "nea_no2_1_hour_max_micrograms_per_cubic_meter", 23),
+            ("so2_twenty_four_hourly", "nea_so2_24_hour_micrograms_per_cubic_meter", 7),
+            ("co_eight_hour_max", "nea_co_8_hour_max_milligrams_per_cubic_meter", 0.43),
+            ("o3_eight_hour_max", "nea_o3_8_hour_max_micrograms_per_cubic_meter", 30),
+            ("so2_sub_index", "nea_so2_sub_index", 4),
+            ("co_sub_index", "nea_co_sub_index", 5),
+            ("o3_sub_index", "nea_o3_sub_index", 13),
+        )
+        for field, metric, value in cases:
+            with self.subTest(field=field):
+                # Each field can independently make a partial observation valid.
+                await self.poll("psi", response("psi", readings={field: {
+                    "north": value, "south": 0, "national": value,
+                    "east": None, "west": -1, "central": True,
+                    "unknown": 99,
+                }}))
+                text = await scrape(self.env)
+                self.assertIn(f"# TYPE {metric} gauge", text)
+                self.assertEqual(
+                    {line for line in text.splitlines() if line.startswith(metric + "{")},
+                    {f'{metric}{{region="{region}",dataset="psi"}} {reading}'
+                     for region, reading in (("north", value), ("south", 0), ("national", value))},
+                )
+                self.assertIn('nea_poll_success{dataset="psi"} 1', text)
+                self.assertNotIn('nea_psi_24_hour{region=', text)
+                await self.poll("psi", SimpleNamespace(ok=False))
+                self.assertIn(f'{metric}{{region="north",dataset="psi"}} {value}', await scrape(self.env))
+                self.clock.return_value = 1791694800 + 3601
+                self.assertNotIn(metric + "{", await scrape(self.env))
+                self.clock.return_value = 1791694860
+
     async def test_partial_dataset_readings(self):
         await self.poll("psi", response("psi", readings={"pm10_sub_index": {"north": 12}}))
         text = await scrape(self.env)

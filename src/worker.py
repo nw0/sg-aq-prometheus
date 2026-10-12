@@ -14,6 +14,13 @@ DATASETS = {
         "pm25_twenty_four_hourly": "nea_pm25_24_hour_micrograms_per_cubic_meter",
         "pm10_sub_index": "nea_pm10_sub_index",
         "pm25_sub_index": "nea_pm25_sub_index",
+        "no2_one_hour_max": "nea_no2_1_hour_max_micrograms_per_cubic_meter",
+        "so2_twenty_four_hourly": "nea_so2_24_hour_micrograms_per_cubic_meter",
+        "co_eight_hour_max": "nea_co_8_hour_max_milligrams_per_cubic_meter",
+        "o3_eight_hour_max": "nea_o3_8_hour_max_micrograms_per_cubic_meter",
+        "so2_sub_index": "nea_so2_sub_index",
+        "co_sub_index": "nea_co_sub_index",
+        "o3_sub_index": "nea_o3_sub_index",
     },
     "pm25": {
         "pm25_one_hourly": "nea_pm25_1_hour_micrograms_per_cubic_meter",

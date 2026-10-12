@@ -36,18 +36,27 @@ Scrape `/metrics` for these gauges:
 | `nea_pm25_24_hour_micrograms_per_cubic_meter` | `region`, `dataset="psi"` | PM2.5 concentration averaged over the preceding 24 hours, in µg/m³. PM2.5 refers to fine particulate matter up to 2.5 micrometres in diameter. |
 | `nea_pm10_sub_index` | `region`, `dataset="psi"` | Dimensionless PSI sub-index derived from the 24-hour PM10 concentration. |
 | `nea_pm25_sub_index` | `region`, `dataset="psi"` | Dimensionless PSI sub-index derived from the 24-hour PM2.5 concentration. |
+| `nea_no2_1_hour_max_micrograms_per_cubic_meter` | `region`, `dataset="psi"` | Maximum 1-hour nitrogen dioxide (NO₂) concentration, in µg/m³. |
+| `nea_so2_24_hour_micrograms_per_cubic_meter` | `region`, `dataset="psi"` | Sulphur dioxide (SO₂) concentration averaged over the preceding 24 hours, in µg/m³. |
+| `nea_co_8_hour_max_milligrams_per_cubic_meter` | `region`, `dataset="psi"` | Maximum 8-hour carbon monoxide (CO) concentration, in mg/m³. |
+| `nea_o3_8_hour_max_micrograms_per_cubic_meter` | `region`, `dataset="psi"` | Maximum 8-hour ozone (O₃) concentration, in µg/m³. |
+| `nea_so2_sub_index` | `region`, `dataset="psi"` | Dimensionless PSI sub-index derived from the SO₂ concentration. |
+| `nea_co_sub_index` | `region`, `dataset="psi"` | Dimensionless PSI sub-index derived from the CO concentration. |
+| `nea_o3_sub_index` | `region`, `dataset="psi"` | Dimensionless PSI sub-index derived from the ozone concentration. |
 | `nea_pm25_1_hour_micrograms_per_cubic_meter` | `region`, `dataset="pm25"` | PM2.5 concentration averaged over the preceding hour, in µg/m³. |
 | `nea_poll_success` | `dataset` | `1` if the latest poll of the dataset succeeded; `0` if it failed or has not yet succeeded. |
 | `nea_last_successful_poll_timestamp_seconds` | `dataset` | Unix timestamp (seconds since the UTC epoch) of the last successful poll. Absent until a poll succeeds. |
 | `nea_observation_timestamp_seconds` | `dataset` | Unix timestamp of the retained dataset observation, rather than the time the exporter fetched it. Absent until a valid observation is stored. |
 
 The `dataset` label identifies the source: `psi` is the PSI dataset (including
-24-hour PM10 and PM2.5 concentrations and their sub-indices), and `pm25` is the
+PM10, PM2.5, NO₂, SO₂, CO, and ozone concentrations and the supplied pollutant
+sub-indices), and `pm25` is the
 hourly PM2.5 dataset. The `region` label identifies the region supplied by NEA:
 `north`, `south`, `east`, `west`, `central`, or `national`, where available.
 Missing or invalid readings are omitted rather than reported as zero.
 
 The 24-hour concentrations are rolling averages, updated hourly by NEA.
+CO concentrations use mg/m³; the other concentrations use µg/m³.
 The exporter uses NEA's supplied sub-indices; see
 [NEA's PSI computation guide](https://www.haze.gov.sg/docs/default-source/faq/computation-of-the-pollutant-standards-index-%28psi%29.pdf)
 for how pollutant concentrations map to PSI values.
