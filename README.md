@@ -12,6 +12,9 @@ In the event of a failed scrape, readings are considered current for 60 minutes.
 
 ## Prometheus configuration
 
+I've hosted this on a public worker.
+See <https://sg-aq.nicholas-593.workers.dev/metrics>.
+
 Add this job to `scrape_configs` in your `prometheus.yml`:
 
 ```yaml
